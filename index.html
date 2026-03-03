@@ -2,35 +2,259 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>FFWS Multi-Match Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFWS Multi-Match Scanner - Neon Edition</title>
     <style>
-        :root { --gold: #ffcc00; --red: #ff4444; --bg: #0a0a0a; --card: #161616; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; }
-        .container { max-width: 950px; margin: auto; }
-        
-        .upload-section { 
-            background: var(--card); border: 2px dashed var(--gold); 
-            padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 20px;
-        }
-        
-        /* Estilo do Botão */
-        .btn-upload { 
-            background: var(--gold); color: black; padding: 15px 30px; 
-            font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 16px;
+        :root {
+            /* Paleta Neon Azul e Branco */
+            --bg-dark: #020611; /* Fundo quase preto com toque de azul */
+            --card-bg: #0a1124; /* Fundo dos cards azul escuro */
+            --neon-blue-dim: #0077ff; /* Azul base */
+            --neon-blue-bright: #00e5ff; /* Ciano brilhante para destaques */
+            --neon-white: #ffffff; /* Branco puro */
+            --text-main: #e0f7fa; /* Texto principal azulado muito claro */
+            --text-muted: #81d4fa; /* Texto secundário azul */
+            
+            /* Efeitos de Brilho */
+            --shadow-neon: 0 0 10px rgba(0, 229, 255, 0.5), 0 0 20px rgba(0, 229, 255, 0.3);
+            --shadow-white: 0 0 10px rgba(255, 255, 255, 0.5);
+            
+            /* Fontes e Espaçamento */
+            --font-family: 'Orbitron', 'Segoe UI', sans-serif; /* Fonte futurista para títulos */
+            --font-body: 'Rajdhani', 'Segoe UI', sans-serif; /* Fonte legível para dados */
         }
 
-        .status-badge { display: inline-block; margin-top: 10px; padding: 5px 15px; border-radius: 20px; background: #333; font-size: 14px; }
+        /* Importando fontes futuristas do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap');
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
-        th { color: #888; text-transform: uppercase; font-size: 12px; padding: 15px; }
-        tr { background: var(--card); transition: 0.3s; }
-        td { padding: 15px; text-align: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 20px;
+            background-image: radial-gradient(circle at center, #0a1936 0%, #020611 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* --- Seção de Upload --- */
+        .upload-section {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue-dim);
+            padding: 40px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-neon);
+            position: relative;
+            overflow: hidden;
+        }
         
-        /* Destaques */
-        .pos-win { border-left: 4px solid var(--gold); background: linear-gradient(90deg, #251f01 0%, #161616 100%); }
-        .tag-name { text-align: left; padding-left: 30px; font-weight: bold; }
-        .kill-count { color: var(--red); font-weight: bold; }
-        .total-pts { color: var(--gold); font-weight: bold; font-size: 1.2em; }
+        /* Efeito de detalhe tecnológico no fundo */
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDc3ZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTAgMGg0MHY0MEgwVjB6bTIwIDIwaDIwdjIwSDIWMjB6TTAgMjBoMjB2MjBIMFYyMHoyMCAwaDIwdjIwSDIwVjB6Ii8+PC9nPjwvZz48L3N2Zz4=');
+            opacity: 0.5;
+            transform: rotate(15deg);
+        }
+
+        .upload-section h1 {
+            font-family: var(--font-family);
+            font-size: 2.5em;
+            text-transform: uppercase;
+            color: var(--neon-white);
+            text-shadow: var(--shadow-white), 0 0 5px var(--neon-blue-bright);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .upload-section p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            position: relative;
+        }
+
+        /* --- Botão Neon --- */
+        .btn-upload {
+            background: transparent;
+            color: var(--neon-blue-bright);
+            padding: 15px 35px;
+            font-family: var(--font-family);
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid var(--neon-blue-bright);
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2), 0 0 10px rgba(0, 229, 255, 0.2);
+            position: relative;
+        }
+
+        .btn-upload:hover {
+            background: var(--neon-blue-bright);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--neon-blue-bright), 0 0 40px var(--neon-blue-bright);
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            border-radius: 4px;
+            background: rgba(0, 119, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            font-size: 14px;
+            color: var(--neon-blue-bright);
+            position: relative;
+        }
+
+        /* --- Tabela Estilizada --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px; /* Espaço entre as linhas 'cards' */
+            margin-top: 10px;
+        }
+
+        th {
+            font-family: var(--font-family);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 13px;
+            padding: 10px 15px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        th.text-left { text-align: left; padding-left: 30px; }
+
+        tr {
+            background: var(--card-bg);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        /* Efeito de Hover na linha */
+        tbody tr:hover {
+            transform: translateY(-3px) scale(1.01);
+            border-color: var(--neon-blue-bright);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2), var(--shadow-neon);
+            background: linear-gradient(90deg, #0a1124 0%, #102046 100%);
+        }
+
+        td {
+            padding: 18px 15px;
+            text-align: center;
+            font-size: 1.1em;
+            color: var(--text-main);
+            border-top: 1px solid rgba(0, 119, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 119, 255, 0.1);
+        }
+        
+        /* Arredondar cantos das linhas (cards) */
+        td:first-child {
+            border-left: 1px solid rgba(0, 119, 255, 0.1);
+            border-radius: 8px 0 0 8px;
+        }
+        td:last-child {
+            border-right: 1px solid rgba(0, 119, 255, 0.1);
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* --- Destaques de Dados --- */
+        
+        /* Coluna POS */
+        .rank-cell {
+            font-family: var(--font-family);
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 1.2em;
+        }
+
+        /* Destaque para o VENCEDOR (1º Lugar) */
+        .pos-win {
+            border: 1px solid var(--neon-white);
+            box-shadow: var(--shadow-white);
+            background: linear-gradient(90deg, #102046 0%, #1a3575 100%);
+        }
+        
+        .pos-win td {
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            color: var(--neon-white);
+        }
+        
+        .pos-win .rank-cell {
+            color: var(--neon-white);
+            text-shadow: var(--shadow-white);
+        }
+        
+        .pos-win .tag-name {
+            color: var(--neon-white);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Coluna TIME */
+        .tag-name {
+            text-align: left;
+            padding-left: 30px;
+            font-weight: 700;
+            color: var(--neon-blue-bright);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Coluna ABATES (Ícone de Caveira em CSS) */
+        .kill-count {
+            color: var(--neon-white);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .kill-count::before {
+            content: '';
+            display: inline-block;
+            width: 16px; height: 16px;
+            background-color: var(--neon-white);
+            /* Ícone de caveira simples em SVG */
+            -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBkPSJNNjQgOTZWMzIwYzAgMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6TTI1NiA2NEg0NDhjMTcuNyAwIDMyIDE0LjMgMzIgMzJWNDgwYzAgMTcuNy0xNC4zIDMyLTMyIDMySDMyYy0xNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkgxOTJWMjI0YzAtMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6TTI1NiA2NEg0NDhjMTcuNyAwIDMyIDE0LjMgMzIgMzJWNDgwYzAgMTcuNy0xNC4zIDMyLTMyIDMySDMyYy0xNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkgxOTJWMjI0YzAtMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6Ii8+PC9zdmc+') no-repeat center;
+            mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBkPSJNNDQ4IDIwOS45MWAtODAuMTUtMTIyLjdjLTQuNzQtNy4yNi0xMi45MS0xMS43Mi0yMS42NC0xMS43MkgxMjUuODNjLTguNzQgMC0xNi45MSA0LjQ3LTIxLjY1IDExLjcyTC04MC4xNSA4Ny4yMWMtNS45OSA5LjE5LTEuNTYgMjEuNDUgOS42IDIxLjQ1aDEzLjgydjI1Ni4wNGMwIDE3LjY3IDE0LjMzIDMyIDMyIDMyaDExMi4wOGMwIDE3LjY3IDE0LjMzIDMyIDMyIDMyaDEzLjM0YzE3LjY3IDAgMzItMTQuMzMgMzItMzJoMTEyLjA4YzE3LjY3IDAgMzItMTQuMzMgMzItMzJWMTA4LjY2aDEzLjgyYzExLjE2IDAgMTUuNTktMTIuMjYgOS42LTIxLjQ1ek04MCAxMDguNjZWMjQwYzAgMTcuNjcgMTQuMzMgMzIgMzIgMzJoMTUuMDRWMTY4Yy0xNy42NyAwLTMyLTE0LjMzLTMyLTMyem0yMDQuMDIgNDUuMDhjLTguNzUgMC0xNS44NSA3LjEtMTUuODUgMTUuODVzNy4xIDE1Ljg1IDE1Ljg1IDE1Ljg1IDE1Ljg1LTcuMSAxNS44NS0xNS44NS03LjEtMTUuODUtMTUuODUtMTUuODV6bTcyLjAyIDAgYy04Ljc1IDAtMTUuODUgNy4xLTE1Ljg1IDE1Ljg1czcuMSAxNS44NSAxNS44NSAxNS44NSAxNS44NS03LjEgMTUuODUtMTUuODVjMC04Ljc1LTcuMS0xNS44NS0xNS44NS0xNS44NXpNMjU2IDQwMGMwIDE3LjY3LTE0LjMzIDMyLTMyIDMyaC0xMy4zNGMtMTcuNjcgMC0zMi0xNC4zMy0zMi0zMmgtMTYwYy0xNy42NyAwLTMyLTE0LjMzLTMyLTMyVjEwOC42NmgxMS41NmwxMzguNDggMjEyLjExYy45NCAxLjQ0IDIuMiAyLjYzIDMuNzggMi42M2gzNy43NGMxLjU3IDAgMi44NC0xLjE5IDMuNzgtMi42M2wxMzguNDgtMjEyLjExaDExLjU2VjI0MHoyNTZjMCAxNy42Ny0xNC4zMyAzMi0zMiAzMmgxNS4wNFYzNjhjMCAxNy42Ny0xNC4zMyAzMi0zMiAzMnoiLz48L3N2Zz4=') no-repeat center;
+            mask-size: contain;
+            box-shadow: 0 0 5px var(--neon-white);
+        }
+
+        /* Coluna PTS TOTAL */
+        .total-pts {
+            font-family: var(--font-family);
+            color: var(--neon-blue-bright);
+            font-weight: bold;
+            font-size: 1.4em;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+        }
+        
+        /* Ajuste responsivo simples */
+        @media (max-width: 768px) {
+            .upload-section h1 { font-size: 1.8em; }
+            td, th { padding: 10px 5px; font-size: 0.9em; }
+            .tag-name { padding-left: 10px; }
+            .total-pts { font-size: 1.1em; }
+        }
     </style>
 </head>
 <body>
@@ -38,17 +262,18 @@
 <div class="container">
     <div class="upload-section">
         <h1>🏆 SISTEMA DE PONTUAÇÃO FFWS</h1>
-        <p>Selecione uma ou **várias prints** ao mesmo tempo</p>
+        <p>Selecione uma ou **várias prints** de resultados ao mesmo tempo</p>
         <input type="file" id="inputFotos" multiple accept="image/*" style="display:none">
-        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Selecionar Fotos (Multi)</button>
-        <div id="infoFiles" class="status-badge">Nenhuma foto selecionada</div>
+        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Carregar Fotos (Multi)</button>
+        <br>
+        <div id="infoFiles" class="status-badge">Aguardando arquivos...</div>
     </div>
 
     <table id="tabelaRanking">
         <thead>
             <tr>
                 <th>POS</th>
-                <th>TIME (TAG)</th>
+                <th class="text-left">TIME (TAG)</th>
                 <th>ABATES TOTAL</th>
                 <th>PTS POSIÇÃO</th>
                 <th>PONTUAÇÃO GERAL</th>
@@ -60,8 +285,9 @@
 </div>
 
 <script>
+    // Lógica JavaScript mantida exatamente igual à original
     const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
-    let bancoDeDadosTimes = {}; // Para acumular pontos de várias fotos
+    let bancoDeDadosTimes = {}; 
 
     document.getElementById('inputFotos').addEventListener('change', function(e) {
         const files = e.target.files;
@@ -69,14 +295,11 @@
 
         document.getElementById('infoFiles').innerText = `${files.length} foto(s) carregada(s). Processando...`;
         
-        // Reinicia o banco para uma nova contagem total ou acumula
         bancoDeDadosTimes = {}; 
 
-        // Para cada foto selecionada, o código "lê" os dados
-        // Aqui simulamos a leitura de 10 slots por foto
         Array.from(files).forEach((file, indexFoto) => {
             
-            // Simulação de dados lidos da sua foto real (10 slots)
+            // Simulação de dados lidos (mantida do original)
             const dadosLidosDaFoto = [
                 { tags: ["CW", "GL", "CW", "NXS"], kills: 15, posOriginal: 1 },
                 { tags: ["João", "SIX", "SIX", "NW"], kills: 25, posOriginal: 2 },
@@ -117,7 +340,6 @@
         const tbody = document.getElementById('corpoTabela');
         tbody.innerHTML = "";
 
-        // Transforma o objeto em array e ordena por pontos
         let rankingFinal = Object.keys(bancoDeDadosTimes).map(tag => ({
             tag: tag,
             ...bancoDeDadosTimes[tag]
@@ -127,9 +349,9 @@
             const classeDestaque = i === 0 ? 'class="pos-win"' : '';
             tbody.innerHTML += `
                 <tr ${classeDestaque}>
-                    <td style="font-weight:bold">${i + 1}º</td>
+                    <td class="rank-cell">${i + 1}º</td>
                     <td class="tag-name">${time.tag}</td>
-                    <td class="kill-count">${time.kills}</td>
+                    <td class="kill-count"><span>${time.kills}</span></td>
                     <td>${time.pontosPos}</td>
                     <td class="total-pts">${time.total}</td>
                 </tr>
