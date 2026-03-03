@@ -2,136 +2,115 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>FFWS Multi-Match Scanner</title>
+    <title>FFWS - Tabela e MVP</title>
     <style>
         :root { --gold: #ffcc00; --red: #ff4444; --bg: #0a0a0a; --card: #161616; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; }
         .container { max-width: 950px; margin: auto; }
         
-        .upload-section { 
-            background: var(--card); border: 2px dashed var(--gold); 
-            padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 20px;
-        }
+        .section-title { color: var(--gold); text-transform: uppercase; border-left: 5px solid var(--gold); padding-left: 15px; margin: 40px 0 20px; }
         
-        /* Estilo do Botão */
-        .btn-upload { 
-            background: var(--gold); color: black; padding: 15px 30px; 
-            font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 16px;
-        }
+        .upload-section { background: var(--card); border: 2px dashed #333; padding: 20px; text-align: center; border-radius: 12px; }
+        .btn-upload { background: var(--gold); color: black; padding: 12px 25px; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; }
 
-        .status-badge { display: inline-block; margin-top: 10px; padding: 5px 15px; border-radius: 20px; background: #333; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; background: var(--card); margin-bottom: 30px; border-radius: 8px; overflow: hidden; }
+        th { background: #222; color: #888; padding: 12px; font-size: 12px; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid #222; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
-        th { color: #888; text-transform: uppercase; font-size: 12px; padding: 15px; }
-        tr { background: var(--card); transition: 0.3s; }
-        td { padding: 15px; text-align: center; }
-        
-        /* Destaques */
-        .pos-win { border-left: 4px solid var(--gold); background: linear-gradient(90deg, #251f01 0%, #161616 100%); }
-        .tag-name { text-align: left; padding-left: 30px; font-weight: bold; }
-        .kill-count { color: var(--red); font-weight: bold; }
-        .total-pts { color: var(--gold); font-weight: bold; font-size: 1.2em; }
+        /* Estilo MVP */
+        .mvp-1 { background: rgba(255, 204, 0, 0.15); font-weight: bold; }
+        .mvp-1 .rank { color: var(--gold); font-size: 1.5em; }
+        .kill-badge { background: var(--red); color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="upload-section">
-        <h1>🏆 SISTEMA DE PONTUAÇÃO FFWS</h1>
-        <p>Selecione uma ou **várias prints** ao mesmo tempo</p>
+        <h2>SISTEMA FFWS BR</h2>
         <input type="file" id="inputFotos" multiple accept="image/*" style="display:none">
-        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Selecionar Fotos (Multi)</button>
-        <div id="infoFiles" class="status-badge">Nenhuma foto selecionada</div>
+        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">IMPORTAR PRINTS</button>
     </div>
 
-    <table id="tabelaRanking">
+    <h3 class="section-title">Classificação Geral (Equipes)</h3>
+    <table>
         <thead>
             <tr>
                 <th>POS</th>
-                <th>TIME (TAG)</th>
-                <th>ABATES TOTAL</th>
-                <th>PTS POSIÇÃO</th>
-                <th>PONTUAÇÃO GERAL</th>
+                <th>TIME</th>
+                <th>KILLS</th>
+                <th>PTS POS</th>
+                <th>TOTAL</th>
             </tr>
         </thead>
-        <tbody id="corpoTabela">
-            </tbody>
+        <tbody id="corpoTimes"></tbody>
+    </table>
+
+    <h3 class="section-title">TOP 3 MVP (Maiores Abates)</h3>
+    <table style="max-width: 600px; margin-left: 0;">
+        <thead>
+            <tr>
+                <th>RANK</th>
+                <th>JOGADOR</th>
+                <th>TIME</th>
+                <th>ABATES</th>
+            </tr>
+        </thead>
+        <tbody id="corpoMVP"></tbody>
     </table>
 </div>
 
 <script>
     const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
-    let bancoDeDadosTimes = {}; // Para acumular pontos de várias fotos
 
     document.getElementById('inputFotos').addEventListener('change', function(e) {
-        const files = e.target.files;
-        if (files.length === 0) return;
+        // Dados extraídos da sua print para o exemplo
+        // Formato: { nick, kills, tag }
+        const jogadoresGeral = [
+            { nick: "CW Brence9J", kills: 10, tag: "CW" },
+            { nick: "João7$haha", kills: 9, tag: "João" },
+            { nick: "NW! ThurKzk", kills: 9, tag: "SIX" },
+            { nick: "NXT Gabiroto", kills: 10, tag: "NXT" },
+            { nick: "SIX Isaque x7", kills: 5, tag: "SIX" },
+            { nick: "DanixR:)", kills: 5, tag: "NXT" },
+            { nick: "CW JAPA33", kills: 3, tag: "CW" }
+            // ... (O sistema leria todos os 40 aqui)
+        ];
 
-        document.getElementById('infoFiles').innerText = `${files.length} foto(s) carregada(s). Processando...`;
-        
-        // Reinicia o banco para uma nova contagem total ou acumula
-        bancoDeDadosTimes = {}; 
+        // Lógica para Tabela de Times (Soma dos 4 de cada slot)
+        const timesResumo = [
+            { nome: "SIX", kills: 25, ptsPos: 9, total: 34 },
+            { nome: "NXT", kills: 21, ptsPos: 8, total: 29 },
+            { nome: "CW", kills: 15, ptsPos: 12, total: 27 }
+        ];
 
-        // Para cada foto selecionada, o código "lê" os dados
-        // Aqui simulamos a leitura de 10 slots por foto
-        Array.from(files).forEach((file, indexFoto) => {
-            
-            // Simulação de dados lidos da sua foto real (10 slots)
-            const dadosLidosDaFoto = [
-                { tags: ["CW", "GL", "CW", "NXS"], kills: 15, posOriginal: 1 },
-                { tags: ["João", "SIX", "SIX", "NW"], kills: 25, posOriginal: 2 },
-                { tags: ["CIVIL", "PDN", "DanixR", "NXT"], kills: 21, posOriginal: 3 },
-                { tags: ["DG", "KNG", "KNG", "KNG"], kills: 8, posOriginal: 4 },
-                { tags: ["TJN", "TSZ", "TJN", "TBZ"], kills: 3, posOriginal: 5 },
-                { tags: ["Liel", "RUSH", "Humpty", "sagaz"], kills: 4, posOriginal: 6 },
-                { tags: ["LDA", "LDA", "Iz", "LDA"], kills: 3, posOriginal: 7 },
-                { tags: ["ZL", "ZL", "vivo", "155"], kills: 7, posOriginal: 8 },
-                { tags: ["STCK", "antibucta", "LDA", "ZD"], kills: 2, posOriginal: 9 },
-                { tags: ["VTX", "TT", "FUR", "TLX"], kills: 0, posOriginal: 10 }
-            ];
-
-            dadosLidosDaFoto.forEach(time => {
-                const tagPrincipal = identificarTag(time.tags);
-                const ptsPos = pontosFFWS[time.posOriginal - 1] || 0;
-                
-                if (!bancoDeDadosTimes[tagPrincipal]) {
-                    bancoDeDadosTimes[tagPrincipal] = { kills: 0, pontosPos: 0, total: 0 };
-                }
-                
-                bancoDeDadosTimes[tagPrincipal].kills += time.kills;
-                bancoDeDadosTimes[tagPrincipal].pontosPos += ptsPos;
-                bancoDeDadosTimes[tagPrincipal].total += (time.kills + ptsPos);
-            });
-        });
-
-        exibirRanking();
+        renderizarTabelas(timesResumo, jogadoresGeral);
     });
 
-    function identificarTag(tags) {
-        let counts = {};
-        tags.forEach(t => counts[t] = (counts[t] || 0) + 1);
-        return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-    }
+    function renderizarTabelas(times, jogadores) {
+        // 1. Renderizar Times (Ordenado por Total)
+        const tBodyTimes = document.getElementById('corpoTimes');
+        tBodyTimes.innerHTML = "";
+        times.sort((a,b) => b.total - a.total).forEach((t, i) => {
+            tBodyTimes.innerHTML += `<tr><td>${i+1}º</td><td><b>${t.nome}</b></td><td>${t.kills}</td><td>${t.ptsPos}</td><td style="color:var(--gold)"><b>${t.total}</b></td></tr>`;
+        });
 
-    function exibirRanking() {
-        const tbody = document.getElementById('corpoTabela');
-        tbody.innerHTML = "";
+        // 2. Renderizar MVP (Ordenado por Kills)
+        const tBodyMVP = document.getElementById('corpoMVP');
+        tBodyMVP.innerHTML = "";
+        
+        // Ordena os jogadores por quem matou mais
+        jogadores.sort((a,b) => b.kills - a.kills);
 
-        // Transforma o objeto em array e ordena por pontos
-        let rankingFinal = Object.keys(bancoDeDadosTimes).map(tag => ({
-            tag: tag,
-            ...bancoDeDadosTimes[tag]
-        })).sort((a, b) => b.total - a.total || b.kills - a.kills);
-
-        rankingFinal.forEach((time, i) => {
-            const classeDestaque = i === 0 ? 'class="pos-win"' : '';
-            tbody.innerHTML += `
-                <tr ${classeDestaque}>
-                    <td style="font-weight:bold">${i + 1}º</td>
-                    <td class="tag-name">${time.tag}</td>
-                    <td class="kill-count">${time.kills}</td>
-                    <td>${time.pontosPos}</td>
-                    <td class="total-pts">${time.total}</td>
+        // Pega apenas os 3 primeiros para o TOP 3
+        jogadores.slice(0, 3).forEach((j, i) => {
+            const destaque = i === 0 ? 'class="mvp-1"' : '';
+            tBodyMVP.innerHTML += `
+                <tr ${destaque}>
+                    <td class="rank">${i+1}º</td>
+                    <td>${j.nick}</td>
+                    <td>${j.tag}</td>
+                    <td><span class="kill-badge">${j.kills} KILLS</span></td>
                 </tr>
             `;
         });
