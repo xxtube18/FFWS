@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>FFWS Multi-Match Scanner</title>
+    <style>
+        :root { --gold: #ffcc00; --red: #ff4444; --bg: #0a0a0a; --card: #161616; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; }
+        .container { max-width: 950px; margin: auto; }
+        
+        .upload-section { 
+            background: var(--card); border: 2px dashed var(--gold); 
+            padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 20px;
+        }
+        
+        /* Estilo do Botão */
+        .btn-upload { 
+            background: var(--gold); color: black; padding: 15px 30px; 
+            font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 16px;
+        }
+
+        .status-badge { display: inline-block; margin-top: 10px; padding: 5px 15px; border-radius: 20px; background: #333; font-size: 14px; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
+        th { color: #888; text-transform: uppercase; font-size: 12px; padding: 15px; }
+        tr { background: var(--card); transition: 0.3s; }
+        td { padding: 15px; text-align: center; }
+        
+        /* Destaques */
+        .pos-win { border-left: 4px solid var(--gold); background: linear-gradient(90deg, #251f01 0%, #161616 100%); }
+        .tag-name { text-align: left; padding-left: 30px; font-weight: bold; }
+        .kill-count { color: var(--red); font-weight: bold; }
+        .total-pts { color: var(--gold); font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="upload-section">
+        <h1>🏆 SISTEMA DE PONTUAÇÃO FFWS</h1>
+        <p>Selecione uma ou **várias prints** ao mesmo tempo</p>
+        <input type="file" id="inputFotos" multiple accept="image/*" style="display:none">
+        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Selecionar Fotos (Multi)</button>
+        <div id="infoFiles" class="status-badge">Nenhuma foto selecionada</div>
+    </div>
+
+    <table id="tabelaRanking">
+        <thead>
+            <tr>
+                <th>POS</th>
+                <th>TIME (TAG)</th>
+                <th>ABATES TOTAL</th>
+                <th>PTS POSIÇÃO</th>
+                <th>PONTUAÇÃO GERAL</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabela">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
+    let bancoDeDadosTimes = {}; // Para acumular pontos de várias fotos
+
+    document.getElementById('inputFotos').addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files.length === 0) return;
+
+        document.getElementById('infoFiles').innerText = `${files.length} foto(s) carregada(s). Processando...`;
+        
+        // Reinicia o banco para uma nova contagem total ou acumula
+        bancoDeDadosTimes = {}; 
+
+        // Para cada foto selecionada, o código "lê" os dados
+        // Aqui simulamos a leitura de 10 slots por foto
+        Array.from(files).forEach((file, indexFoto) => {
+            
+            // Simulação de dados lidos da sua foto real (10 slots)
+            const dadosLidosDaFoto = [
+                { tags: ["CW", "GL", "CW", "NXS"], kills: 15, posOriginal: 1 },
+                { tags: ["João", "SIX", "SIX", "NW"], kills: 25, posOriginal: 2 },
+                { tags: ["CIVIL", "PDN", "DanixR", "NXT"], kills: 21, posOriginal: 3 },
+                { tags: ["DG", "KNG", "KNG", "KNG"], kills: 8, posOriginal: 4 },
+                { tags: ["TJN", "TSZ", "TJN", "TBZ"], kills: 3, posOriginal: 5 },
+                { tags: ["Liel", "RUSH", "Humpty", "sagaz"], kills: 4, posOriginal: 6 },
+                { tags: ["LDA", "LDA", "Iz", "LDA"], kills: 3, posOriginal: 7 },
+                { tags: ["ZL", "ZL", "vivo", "155"], kills: 7, posOriginal: 8 },
+                { tags: ["STCK", "antibucta", "LDA", "ZD"], kills: 2, posOriginal: 9 },
+                { tags: ["VTX", "TT", "FUR", "TLX"], kills: 0, posOriginal: 10 }
+            ];
+
+            dadosLidosDaFoto.forEach(time => {
+                const tagPrincipal = identificarTag(time.tags);
+                const ptsPos = pontosFFWS[time.posOriginal - 1] || 0;
+                
+                if (!bancoDeDadosTimes[tagPrincipal]) {
+                    bancoDeDadosTimes[tagPrincipal] = { kills: 0, pontosPos: 0, total: 0 };
+                }
+                
+                bancoDeDadosTimes[tagPrincipal].kills += time.kills;
+                bancoDeDadosTimes[tagPrincipal].pontosPos += ptsPos;
+                bancoDeDadosTimes[tagPrincipal].total += (time.kills + ptsPos);
+            });
+        });
+
+        exibirRanking();
+    });
+
+    function identificarTag(tags) {
+        let counts = {};
+        tags.forEach(t => counts[t] = (counts[t] || 0) + 1);
+        return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+    }
+
+    function exibirRanking() {
+        const tbody = document.getElementById('corpoTabela');
+        tbody.innerHTML = "";
+
+        // Transforma o objeto em array e ordena por pontos
+        let rankingFinal = Object.keys(bancoDeDadosTimes).map(tag => ({
+            tag: tag,
+            ...bancoDeDadosTimes[tag]
+        })).sort((a, b) => b.total - a.total || b.kills - a.kills);
+
+        rankingFinal.forEach((time, i) => {
+            const classeDestaque = i === 0 ? 'class="pos-win"' : '';
+            tbody.innerHTML += `
+                <tr ${classeDestaque}>
+                    <td style="font-weight:bold">${i + 1}º</td>
+                    <td class="tag-name">${time.tag}</td>
+                    <td class="kill-count">${time.kills}</td>
+                    <td>${time.pontosPos}</td>
+                    <td class="total-pts">${time.total}</td>
+                </tr>
+            `;
+        });
+    }
+</script>
+</body>
+</html>
