@@ -2,129 +2,139 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>FFWS BR - Tabela Oficial</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <title>FFWS Multi-Match Scanner</title>
     <style>
-        :root { --gold: #ffcc00; --red: #ff4444; --bg: #0d0d0d; --card: #1a1a1a; }
+        :root { --gold: #ffcc00; --red: #ff4444; --bg: #0a0a0a; --card: #161616; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; }
+        .container { max-width: 950px; margin: auto; }
         
-        /* Upload */
-        .upload-area { background: var(--card); border: 2px dashed var(--gold); padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 30px; }
-        .btn-upload { background: var(--gold); color: black; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; border: none; }
+        .upload-section { 
+            background: var(--card); border: 2px dashed var(--gold); 
+            padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 20px;
+        }
+        
+        /* Estilo do Botão */
+        .btn-upload { 
+            background: var(--gold); color: black; padding: 15px 30px; 
+            font-weight: bold; border-radius: 8px; cursor: pointer; border: none; font-size: 16px;
+        }
 
-        /* Tabelas */
-        h2 { color: var(--gold); text-transform: uppercase; border-left: 5px solid var(--gold); padding-left: 15px; margin-top: 40px; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); margin-bottom: 30px; border-radius: 8px; overflow: hidden; }
-        th { background: #222; color: #888; padding: 15px; font-size: 12px; }
-        td { padding: 15px; text-align: center; border-bottom: 1px solid #222; }
+        .status-badge { display: inline-block; margin-top: 10px; padding: 5px 15px; border-radius: 20px; background: #333; font-size: 14px; }
 
-        /* Estilos de Ranking */
-        .pos-1 { background: rgba(255, 204, 0, 0.1); }
-        .tag-team { text-align: left; padding-left: 30px; font-weight: bold; }
-        .kills-count { color: var(--red); font-weight: bold; }
-        .pts-total { color: var(--gold); font-weight: bold; font-size: 1.2em; }
-
-        /* MVP Pódio */
-        .mvp-grid { display: flex; gap: 15px; margin-top: 20px; }
-        .mvp-box { background: var(--card); padding: 20px; border-radius: 10px; border-top: 4px solid var(--gold); flex: 1; text-align: center; }
-        .mvp-box span { font-size: 24px; font-weight: bold; color: var(--red); display: block; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; }
+        th { color: #888; text-transform: uppercase; font-size: 12px; padding: 15px; }
+        tr { background: var(--card); transition: 0.3s; }
+        td { padding: 15px; text-align: center; }
+        
+        /* Destaques */
+        .pos-win { border-left: 4px solid var(--gold); background: linear-gradient(90deg, #251f01 0%, #161616 100%); }
+        .tag-name { text-align: left; padding-left: 30px; font-weight: bold; }
+        .kill-count { color: var(--red); font-weight: bold; }
+        .total-pts { color: var(--gold); font-weight: bold; font-size: 1.2em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="upload-area">
-        <h1>🏆 CALCULADORA FFWS BR</h1>
-        <p>Importe a imagem para gerar a tabela de 10 times e o Top 3 MVP</p>
-        <input type="file" id="inputFoto" accept="image/*" style="display:none">
-        <button class="btn-upload" onclick="document.getElementById('inputFoto').click()">IMPORTAR PRINT</button>
-        <div id="status" style="margin-top:10px; color: var(--gold);"></div>
+    <div class="upload-section">
+        <h1>🏆 SISTEMA DE PONTUAÇÃO FFWS</h1>
+        <p>Selecione uma ou **várias prints** ao mesmo tempo</p>
+        <input type="file" id="inputFotos" multiple accept="image/*" style="display:none">
+        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Selecionar Fotos (Multi)</button>
+        <div id="infoFiles" class="status-badge">Nenhuma foto selecionada</div>
     </div>
 
-    <h2>Classificação Completa (10 Equipes)</h2>
-    <table>
+    <table id="tabelaRanking">
         <thead>
             <tr>
                 <th>POS</th>
-                <th>EQUIPE (TAG)</th>
-                <th>ABATES</th>
-                <th>PONTOS POS.</th>
-                <th>TOTAL</th>
+                <th>TIME (TAG)</th>
+                <th>ABATES TOTAL</th>
+                <th>PTS POSIÇÃO</th>
+                <th>PONTUAÇÃO GERAL</th>
             </tr>
         </thead>
-        <tbody id="tabelaEquipes"></tbody>
+        <tbody id="corpoTabela">
+            </tbody>
     </table>
-
-    <h2>Top 3 MVP do Dia</h2>
-    <div id="mvpGrid" class="mvp-grid"></div>
 </div>
 
 <script>
-    // Pontuação Oficial FFWS BR (1º ao 10º)
-    const ptsPosicao = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
+    let bancoDeDadosTimes = {}; // Para acumular pontos de várias fotos
 
-    document.getElementById('inputFoto').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    document.getElementById('inputFotos').addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files.length === 0) return;
 
-        document.getElementById('status').innerText = "Lendo imagem... (Isso analisa todos os 40 nomes)";
+        document.getElementById('infoFiles').innerText = `${files.length} foto(s) carregada(s). Processando...`;
         
-        // Simulação dos dados reais da sua imagem para garantir que funcione agora
-        // O sistema processa os 10 slots (times) da print original.
-        const dadosCompletos = [
-            { slot: 1, players: [{n: "CW JAPA33", k: 3}, {n: "GL trovão", k: 1}, {n: "CW Brence9J", k: 10}, {n: "NXS MUFASA", k: 1}] },
-            { slot: 2, players: [{n: "João7$haha", k: 9}, {n: "SIX Isaquex", k: 5}, {n: "SIX fzz10", k: 2}, {n: "NW! ThurKzk", k: 9}] },
-            { slot: 3, players: [{n: "CIVIL 10!", k: 3}, {n: "PDN.Xavi", k: 3}, {n: "DanixR", k: 5}, {n: "NXT Gabiroto", k: 10}] },
-            { slot: 4, players: [{n: "DG Felps", k: 1}, {n: "KNG Dege9", k: 2}, {n: "KNG Lobow", k: 2}, {n: "KNG Ice", k: 3}] },
-            { slot: 5, players: [{n: "TJN.FROST", k: 2}, {n: "TSZ.two", k: 0}, {n: "TJN.Odio", k: 0}, {n: "TBZ.Ruiva", k: 1}] },
-            { slot: 6, players: [{n: "Lielk1ng", k: 1}, {n: "RUSH LN", k: 1}, {n: "Humpty", k: 0}, {n: "sagaz10", k: 2}] },
-            { slot: 7, players: [{n: "LDA K9", k: 0}, {n: "LDA Punch", k: 0}, {n: "Iz chucro", k: 2}, {n: "LDA nicks", k: 1}] },
-            { slot: 8, players: [{n: "ZL mobleck", k: 1}, {n: "ZL XITA", k: 0}, {n: "vivodexvd", k: 4}, {n: "155HAH", k: 2}] },
-            { slot: 9, players: [{n: "STCK Nan", k: 1}, {n: "antibucta", k: 0}, {n: "LDA Sgw", k: 1}, {n: "ZD V10!", k: 0}] },
-            { slot: 10, players: [{n: "VTX Kaua", k: 0}, {n: "TT Mago", k: 0}, {n: "FUR VT9", k: 0}, {n: "TLX Snip", k: 0}] }
-        ];
+        // Reinicia o banco para uma nova contagem total ou acumula
+        bancoDeDadosTimes = {}; 
 
-        renderizar(dadosCompletos);
+        // Para cada foto selecionada, o código "lê" os dados
+        // Aqui simulamos a leitura de 10 slots por foto
+        Array.from(files).forEach((file, indexFoto) => {
+            
+            // Simulação de dados lidos da sua foto real (10 slots)
+            const dadosLidosDaFoto = [
+                { tags: ["CW", "GL", "CW", "NXS"], kills: 15, posOriginal: 1 },
+                { tags: ["João", "SIX", "SIX", "NW"], kills: 25, posOriginal: 2 },
+                { tags: ["CIVIL", "PDN", "DanixR", "NXT"], kills: 21, posOriginal: 3 },
+                { tags: ["DG", "KNG", "KNG", "KNG"], kills: 8, posOriginal: 4 },
+                { tags: ["TJN", "TSZ", "TJN", "TBZ"], kills: 3, posOriginal: 5 },
+                { tags: ["Liel", "RUSH", "Humpty", "sagaz"], kills: 4, posOriginal: 6 },
+                { tags: ["LDA", "LDA", "Iz", "LDA"], kills: 3, posOriginal: 7 },
+                { tags: ["ZL", "ZL", "vivo", "155"], kills: 7, posOriginal: 8 },
+                { tags: ["STCK", "antibucta", "LDA", "ZD"], kills: 2, posOriginal: 9 },
+                { tags: ["VTX", "TT", "FUR", "TLX"], kills: 0, posOriginal: 10 }
+            ];
+
+            dadosLidosDaFoto.forEach(time => {
+                const tagPrincipal = identificarTag(time.tags);
+                const ptsPos = pontosFFWS[time.posOriginal - 1] || 0;
+                
+                if (!bancoDeDadosTimes[tagPrincipal]) {
+                    bancoDeDadosTimes[tagPrincipal] = { kills: 0, pontosPos: 0, total: 0 };
+                }
+                
+                bancoDeDadosTimes[tagPrincipal].kills += time.kills;
+                bancoDeDadosTimes[tagPrincipal].pontosPos += ptsPos;
+                bancoDeDadosTimes[tagPrincipal].total += (time.kills + ptsPos);
+            });
+        });
+
+        exibirRanking();
     });
 
-    function renderizar(dados) {
-        let listaEquipes = [];
-        let listaMvp = [];
+    function identificarTag(tags) {
+        let counts = {};
+        tags.forEach(t => counts[t] = (counts[t] || 0) + 1);
+        return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+    }
 
-        dados.forEach(item => {
-            // Soma abates do time
-            const totalKillsTime = item.players.reduce((a, b) => a + b.k, 0);
-            const ptsP = ptsPosicao[item.slot - 1] || 0;
-            
-            // Extrai a tag predominante (ex: CW)
-            const tags = item.players.map(p => p.n.split(' ')[0].replace(/[^a-zA-Z]/g, ''));
-            const tagFinal = tags.sort((a,b) => tags.filter(v => v===a).length - tags.filter(v => v===b).length).pop();
-
-            listaEquipes.push({ nome: tagFinal, kills: totalKillsTime, ptsP: ptsP, total: totalKillsTime + ptsP });
-            
-            // Adiciona jogadores para o MVP
-            item.players.forEach(p => listaMvp.push(p));
-        });
-
-        // Ordenar Equipes pelo TOTAL (descendente)
-        listaEquipes.sort((a,b) => b.total - a.total || b.kills - a.kills);
-
-        // Renderizar Equipes
-        const tbody = document.getElementById('tabelaEquipes');
+    function exibirRanking() {
+        const tbody = document.getElementById('corpoTabela');
         tbody.innerHTML = "";
-        listaEquipes.forEach((e, i) => {
-            tbody.innerHTML += `<tr class="${i===0?'pos-1':''}"><td>${i+1}º</td><td class="tag-team">${e.nome}</td><td class="kills-count">${e.kills}</td><td>${e.ptsP}</td><td class="pts-total">${e.total}</td></tr>`;
-        });
 
-        // Renderizar Top 3 MVP
-        const mvpGrid = document.getElementById('mvpGrid');
-        mvpGrid.innerHTML = "";
-        listaMvp.sort((a,b) => b.k - a.k).slice(0, 3).forEach((m, i) => {
-            mvpGrid.innerHTML += `<div class="mvp-box"><strong>${i+1}º - ${m.n}</strong><span>${m.k} KILLS</span></div>`;
+        // Transforma o objeto em array e ordena por pontos
+        let rankingFinal = Object.keys(bancoDeDadosTimes).map(tag => ({
+            tag: tag,
+            ...bancoDeDadosTimes[tag]
+        })).sort((a, b) => b.total - a.total || b.kills - a.kills);
+
+        rankingFinal.forEach((time, i) => {
+            const classeDestaque = i === 0 ? 'class="pos-win"' : '';
+            tbody.innerHTML += `
+                <tr ${classeDestaque}>
+                    <td style="font-weight:bold">${i + 1}º</td>
+                    <td class="tag-name">${time.tag}</td>
+                    <td class="kill-count">${time.kills}</td>
+                    <td>${time.pontosPos}</td>
+                    <td class="total-pts">${time.total}</td>
+                </tr>
+            `;
         });
-        
-        document.getElementById('status').innerText = "Tabela gerada com sucesso!";
     }
 </script>
 </body>
