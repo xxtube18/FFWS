@@ -285,8 +285,8 @@
 </div>
 
 <script>
-    // Lógica JavaScript mantida exatamente igual à original
-    const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0];
+    // Lógica JavaScript atualizada com os dados extraídos do seu arquivo
+    const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 0];
     let bancoDeDadosTimes = {}; 
 
     document.getElementById('inputFotos').addEventListener('change', function(e) {
@@ -299,18 +299,21 @@
 
         Array.from(files).forEach((file, indexFoto) => {
             
-            // Simulação de dados lidos (mantida do original)
+            // Dados lidos substituídos pelas informações reais da sua partida
             const dadosLidosDaFoto = [
-                { tags: ["CW", "GL", "CW", "NXS"], kills: 15, posOriginal: 1 },
-                { tags: ["João", "SIX", "SIX", "NW"], kills: 25, posOriginal: 2 },
-                { tags: ["CIVIL", "PDN", "DanixR", "NXT"], kills: 21, posOriginal: 3 },
-                { tags: ["DG", "KNG", "KNG", "KNG"], kills: 8, posOriginal: 4 },
-                { tags: ["TJN", "TSZ", "TJN", "TBZ"], kills: 3, posOriginal: 5 },
-                { tags: ["Liel", "RUSH", "Humpty", "sagaz"], kills: 4, posOriginal: 6 },
-                { tags: ["LDA", "LDA", "Iz", "LDA"], kills: 3, posOriginal: 7 },
-                { tags: ["ZL", "ZL", "vivo", "155"], kills: 7, posOriginal: 8 },
-                { tags: ["STCK", "antibucta", "LDA", "ZD"], kills: 2, posOriginal: 9 },
-                { tags: ["VTX", "TT", "FUR", "TLX"], kills: 0, posOriginal: 10 }
+                { tags: ["LOOPS", "LOOPS", "LOOPS", "LOOPS"], kills: 20, posOriginal: 1 },
+                { tags: ["TS", "TS", "TS", "TS"], kills: 23, posOriginal: 2 },
+                { tags: ["BWT E-SPORTS", "BWT E-SPORTS", "BWT E-SPORTS", "BWT E-SPORTS"], kills: 13, posOriginal: 3 },
+                { tags: ["AXS", "AXS", "AXS", "AXS"], kills: 20, posOriginal: 4 },
+                { tags: ["BRANCA", "BRANCA", "BRANCA", "BRANCA"], kills: 11, posOriginal: 5 },
+                { tags: ["FUTURY", "FUTURY", "FUTURY", "FUTURY"], kills: 14, posOriginal: 6 },
+                { tags: ["CHV", "CHV", "CHV", "CHV"], kills: 1, posOriginal: 7 },
+                { tags: ["JLD SQUADRÃO", "JLD SQUADRÃO", "JLD SQUADRÃO", "JLD SQUADRÃO"], kills: 10, posOriginal: 8 },
+                { tags: ["INTZ", "INTZ", "INTZ", "INTZ"], kills: 3, posOriginal: 9 },
+                { tags: ["CKC", "CKC", "CKC", "CKC"], kills: 4, posOriginal: 10 },
+                { tags: ["LOS MOSTRO", "LOS MOSTRO", "LOS MOSTRO", "LOS MOSTRO"], kills: 0, posOriginal: 11 },
+                { tags: ["RAVE", "RAVE", "RAVE", "RAVE"], kills: 0, posOriginal: 12 },
+                { tags: ["TEAM LPFF", "TEAM LPFF", "TEAM LPFF", "TEAM LPFF"], kills: 0, posOriginal: 13 }
             ];
 
             dadosLidosDaFoto.forEach(time => {
