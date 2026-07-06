@@ -7,24 +7,23 @@
     <style>
         :root {
             /* Paleta Neon Azul e Branco */
-            --bg-dark: #020611; /* Fundo quase preto com toque de azul */
-            --card-bg: #0a1124; /* Fundo dos cards azul escuro */
-            --neon-blue-dim: #0077ff; /* Azul base */
-            --neon-blue-bright: #00e5ff; /* Ciano brilhante para destaques */
-            --neon-white: #ffffff; /* Branco puro */
-            --text-main: #e0f7fa; /* Texto principal azulado muito claro */
-            --text-muted: #81d4fa; /* Texto secundário azul */
+            --bg-dark: #020611;
+            --card-bg: #0a1124;
+            --neon-blue-dim: #0077ff;
+            --neon-blue-bright: #00e5ff;
+            --neon-white: #ffffff;
+            --text-main: #e0f7fa;
+            --text-muted: #81d4fa;
             
             /* Efeitos de Brilho */
             --shadow-neon: 0 0 10px rgba(0, 229, 255, 0.5), 0 0 20px rgba(0, 229, 255, 0.3);
             --shadow-white: 0 0 10px rgba(255, 255, 255, 0.5);
             
             /* Fontes e Espaçamento */
-            --font-family: 'Orbitron', 'Segoe UI', sans-serif; /* Fonte futurista para títulos */
-            --font-body: 'Rajdhani', 'Segoe UI', sans-serif; /* Fonte legível para dados */
+            --font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            --font-body: 'Rajdhani', 'Segoe UI', sans-serif;
         }
 
-        /* Importando fontes futuristas do Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +42,6 @@
             margin: auto;
         }
 
-        /* --- Seção de Upload --- */
         .upload-section {
             background: var(--card-bg);
             border: 1px solid var(--neon-blue-dim);
@@ -56,7 +54,6 @@
             overflow: hidden;
         }
         
-        /* Efeito de detalhe tecnológico no fundo */
         .upload-section::before {
             content: '';
             position: absolute;
@@ -85,7 +82,6 @@
             position: relative;
         }
 
-        /* --- Botão Neon --- */
         .btn-upload {
             background: transparent;
             color: var(--neon-blue-bright);
@@ -121,11 +117,10 @@
             position: relative;
         }
 
-        /* --- Tabela Estilizada --- */
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 12px; /* Espaço entre as linhas 'cards' */
+            border-spacing: 0 12px;
             margin-top: 10px;
         }
 
@@ -147,7 +142,6 @@
             transition: all 0.3s ease;
         }
         
-        /* Efeito de Hover na linha */
         tbody tr:hover {
             transform: translateY(-3px) scale(1.01);
             border-color: var(--neon-blue-bright);
@@ -164,7 +158,6 @@
             border-bottom: 1px solid rgba(0, 119, 255, 0.1);
         }
         
-        /* Arredondar cantos das linhas (cards) */
         td:first-child {
             border-left: 1px solid rgba(0, 119, 255, 0.1);
             border-radius: 8px 0 0 8px;
@@ -174,9 +167,6 @@
             border-radius: 0 8px 8px 0;
         }
 
-        /* --- Destaques de Dados --- */
-        
-        /* Coluna POS */
         .rank-cell {
             font-family: var(--font-family);
             font-weight: bold;
@@ -184,7 +174,6 @@
             font-size: 1.2em;
         }
 
-        /* Destaque para o VENCEDOR (1º Lugar) */
         .pos-win {
             border: 1px solid var(--neon-white);
             box-shadow: var(--shadow-white);
@@ -207,7 +196,6 @@
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
-        /* Coluna TIME */
         .tag-name {
             text-align: left;
             padding-left: 30px;
@@ -217,7 +205,6 @@
             letter-spacing: 1px;
         }
 
-        /* Coluna ABATES (Ícone de Caveira em CSS) */
         .kill-count {
             color: var(--neon-white);
             font-weight: bold;
@@ -232,14 +219,12 @@
             display: inline-block;
             width: 16px; height: 16px;
             background-color: var(--neon-white);
-            /* Ícone de caveira simples em SVG */
             -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBkPSJNNjQgOTZWMzIwYzAgMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6TTI1NiA2NEg0NDhjMTcuNyAwIDMyIDE0LjMgMzIgMzJWNDgwYzAgMTcuNy0xNC4zIDMyLTMyIDMySDMyYy0xNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkgxOTJWMjI0YzAtMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6TTI1NiA2NEg0NDhjMTcuNyAwIDMyIDE0LjMgMzIgMzJWNDgwYzAgMTcuNy0xNC4zIDMyLTMyIDMySDMyYy0xNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkgxOTJWMjI0YzAtMTcuNyAxNC4zIDMyIDMyIDMySDM4NGMxNy43IDAgMzItMTQuMyAzMi0zMlY5NmMwLTE3LjctMTQuMy0zMi0zMi0zMkg5NkM3OC4zIDY0IDY0IDc4LjMgNjQgOTZ6Ii8+PC9zdmc+') no-repeat center;
             mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBkPSJNNDQ4IDIwOS45MWAtODAuMTUtMTIyLjdjLTQuNzQtNy4yNi0xMi45MS0xMS43Mi0yMS42NC0xMS43MkgxMjUuODNjLTguNzQgMC0xNi45MSA0LjQ3LTIxLjY1IDExLjcyTC04MC4xNSA4Ny4yMWMtNS45OSA5LjE5LTEuNTYgMjEuNDUgOS42IDIxLjQ1aDEzLjgydjI1Ni4wNGMwIDE3LjY3IDE0LjMzIDMyIDMyIDMyaDExMi4wOGMwIDE3LjY3IDE0LjMzIDMyIDMyIDMyaDEzLjM0YzE3LjY3IDAgMzItMTQuMzMgMzItMzJoMTEyLjA4YzE3LjY3IDAgMzItMTQuMzMgMzItMzJWMTA4LjY2aDEzLjgyYzExLjE2IDAgMTUuNTktMTIuMjYgOS42LTIxLjQ1ek04MCAxMDguNjZWMjQwYzAgMTcuNjcgMTQuMzMgMzIgMzIgMzJoMTUuMDRWMTY4Yy0xNy42NyAwLTMyLTE0LjMzLTMyLTMyem0yMDQuMDIgNDUuMDhjLTguNzUgMC0xNS44NSA3LjEtMTUuODUgMTUuODVzNy4xIDE1Ljg1IDE1Ljg1IDE1Ljg1IDE1Ljg1LTcuMSAxNS44NS0xNS44NS03LjEtMTUuODUtMTUuODUtMTUuODV6bTcyLjAyIDAgYy04Ljc1IDAtMTUuODUgNy4xLTE1Ljg1IDE1Ljg1czcuMSAxNS44NSAxNS44NSAxNS44NSAxNS44NS03LjEgMTUuODUtMTUuODVjMC04Ljc1LTcuMS0xNS44NS0xNS44NS0xNS44NXpNMjU2IDQwMGMwIDE3LjY3LTE0LjMzIDMyLTMyIDMyaC0xMy4zNGMtMTcuNjcgMC0zMi0xNC4zMy0zMi0zMmgtMTYwYy0xNy42NyAwLTMyLTE0LjMzLTMyLTMyVjEwOC42NmgxMS41NmwxMzguNDggMjEyLjExYy45NCAxLjQ0IDIuMiAyLjYzIDMuNzggMi42M2gzNy43NGMxLjU3IDAgMi44NC0xLjE5IDMuNzgtMi42M2wxMzguNDgtMjEyLjExaDExLjU2VjI0MHoyNTZjMCAxNy42Ny0xNC4zMyAzMi0zMiAzMmgxNS4wNFYzNjhjMCAxNy42Ny0xNC4zMyAzMi0zMiAzMnoiLz48L3N2Zz4=') no-repeat center;
             mask-size: contain;
             box-shadow: 0 0 5px var(--neon-white);
         }
 
-        /* Coluna PTS TOTAL */
         .total-pts {
             font-family: var(--font-family);
             color: var(--neon-blue-bright);
@@ -248,7 +233,6 @@
             text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
         }
         
-        /* Ajuste responsivo simples */
         @media (max-width: 768px) {
             .upload-section h1 { font-size: 1.8em; }
             td, th { padding: 10px 5px; font-size: 0.9em; }
@@ -262,9 +246,11 @@
 <div class="container">
     <div class="upload-section">
         <h1>🏆 SISTEMA DE PONTUAÇÃO FFWS</h1>
-        <p>Selecione uma ou **várias prints** de resultados ao mesmo tempo</p>
-        <input type="file" id="inputFotos" multiple accept="image/*" style="display:none">
-        <button class="btn-upload" onclick="document.getElementById('inputFotos').click()">Carregar Fotos (Multi)</button>
+        <p>Selecione um ou **vários arquivos .log / .txt** de resultados ao mesmo tempo</p>
+        
+        <!-- MUDANÇA AQUI: Input agora aceita arquivos de texto/logs em vez de imagens -->
+        <input type="file" id="inputFiles" multiple accept=".txt,.log,text/plain" style="display:none">
+        <button class="btn-upload" onclick="document.getElementById('inputFiles').click()">Carregar Arquivos de Log</button>
         <br>
         <div id="infoFiles" class="status-badge">Aguardando arquivos...</div>
     </div>
@@ -285,69 +271,77 @@
 </div>
 
 <script>
-    // Lógica JavaScript atualizada com os dados extraídos do seu arquivo
+    // Tabela oficial de pontos do FFWS baseada em posição
     const pontosFFWS = [12, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 0];
     let bancoDeDadosTimes = {}; 
 
-    document.getElementById('inputFotos').addEventListener('change', function(e) {
+    // MUDANÇA AQUI: Evento agora lê o conteúdo de arquivos de texto de verdade
+    document.getElementById('inputFiles').addEventListener('change', function(e) {
         const files = e.target.files;
         if (files.length === 0) return;
 
-        document.getElementById('infoFiles').innerText = `${files.length} foto(s) carregada(s). Processando...`;
+        document.getElementById('infoFiles').innerText = `${files.length} arquivo(s) carregado(s). Extraindo dados...`;
         
         bancoDeDadosTimes = {}; 
+        let filesProcessed = 0;
 
-        Array.from(files).forEach((file, indexFoto) => {
+        Array.from(files).forEach((file) => {
+            const reader = new FileReader();
             
-            // Dados lidos substituídos pelas informações reais da sua partida
-            const dadosLidosDaFoto = [
-                { tags: ["LOOPS", "LOOPS", "LOOPS", "LOOPS"], kills: 20, posOriginal: 1 },
-                { tags: ["TS", "TS", "TS", "TS"], kills: 23, posOriginal: 2 },
-                { tags: ["BWT E-SPORTS", "BWT E-SPORTS", "BWT E-SPORTS", "BWT E-SPORTS"], kills: 13, posOriginal: 3 },
-                { tags: ["AXS", "AXS", "AXS", "AXS"], kills: 20, posOriginal: 4 },
-                { tags: ["BRANCA", "BRANCA", "BRANCA", "BRANCA"], kills: 11, posOriginal: 5 },
-                { tags: ["FUTURY", "FUTURY", "FUTURY", "FUTURY"], kills: 14, posOriginal: 6 },
-                { tags: ["CHV", "CHV", "CHV", "CHV"], kills: 1, posOriginal: 7 },
-                { tags: ["JLD SQUADRÃO", "JLD SQUADRÃO", "JLD SQUADRÃO", "JLD SQUADRÃO"], kills: 10, posOriginal: 8 },
-                { tags: ["INTZ", "INTZ", "INTZ", "INTZ"], kills: 3, posOriginal: 9 },
-                { tags: ["CKC", "CKC", "CKC", "CKC"], kills: 4, posOriginal: 10 },
-                { tags: ["LOS MOSTRO", "LOS MOSTRO", "LOS MOSTRO", "LOS MOSTRO"], kills: 0, posOriginal: 11 },
-                { tags: ["RAVE", "RAVE", "RAVE", "RAVE"], kills: 0, posOriginal: 12 },
-                { tags: ["TEAM LPFF", "TEAM LPFF", "TEAM LPFF", "TEAM LPFF"], kills: 0, posOriginal: 13 }
-            ];
-
-            dadosLidosDaFoto.forEach(time => {
-                const tagPrincipal = identificarTag(time.tags);
-                const ptsPos = pontosFFWS[time.posOriginal - 1] || 0;
+            // O que fazer quando o arquivo terminar de ser lido
+            reader.onload = function(event) {
+                const text = event.target.result;
+                const lines = text.split('\n');
                 
-                if (!bancoDeDadosTimes[tagPrincipal]) {
-                    bancoDeDadosTimes[tagPrincipal] = { kills: 0, pontosPos: 0, total: 0 };
+                // Essa Expressão Regular (Regex) vai procurar e capturar os dados na linha:
+                // Exemplo: "TeamName: LOOPS    Rank: 1    KillScore: 20"
+                const matchRegex = /TeamName:\s*(.+?)\s+Rank:\s*(\d+)\s+KillScore:\s*(\d+)/;
+
+                lines.forEach(line => {
+                    const extraido = line.match(matchRegex);
+                    
+                    if (extraido) {
+                        const tagTime = extraido[1].trim(); // Captura e limpa o nome (ex: LOOPS)
+                        const posicao = parseInt(extraido[2]); // Captura o RANK (ex: 1)
+                        const abatesDaQueda = parseInt(extraido[3]); // Captura os abates (ex: 20)
+
+                        const ptsPos = pontosFFWS[posicao - 1] || 0;
+                        
+                        if (!bancoDeDadosTimes[tagTime]) {
+                            bancoDeDadosTimes[tagTime] = { kills: 0, pontosPos: 0, total: 0 };
+                        }
+                        
+                        // Vai somando caso você coloque vários arquivos para fazer o ranking diário/semanal
+                        bancoDeDadosTimes[tagTime].kills += abatesDaQueda;
+                        bancoDeDadosTimes[tagTime].pontosPos += ptsPos;
+                        bancoDeDadosTimes[tagTime].total += (abatesDaQueda + ptsPos);
+                    }
+                });
+
+                // Verifica se todos os arquivos foram lidos para exibir o ranking final
+                filesProcessed++;
+                if (filesProcessed === files.length) {
+                    exibirRanking();
+                    document.getElementById('infoFiles').innerText = `Processamento concluído com sucesso!`;
                 }
-                
-                bancoDeDadosTimes[tagPrincipal].kills += time.kills;
-                bancoDeDadosTimes[tagPrincipal].pontosPos += ptsPos;
-                bancoDeDadosTimes[tagPrincipal].total += (time.kills + ptsPos);
-            });
+            };
+            
+            // Inicia a leitura do arquivo como Texto
+            reader.readAsText(file);
         });
-
-        exibirRanking();
     });
-
-    function identificarTag(tags) {
-        let counts = {};
-        tags.forEach(t => counts[t] = (counts[t] || 0) + 1);
-        return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-    }
 
     function exibirRanking() {
         const tbody = document.getElementById('corpoTabela');
         tbody.innerHTML = "";
 
+        // Transforma o objeto em Array e ordena pelos pontos (ou kills em caso de empate)
         let rankingFinal = Object.keys(bancoDeDadosTimes).map(tag => ({
             tag: tag,
             ...bancoDeDadosTimes[tag]
         })).sort((a, b) => b.total - a.total || b.kills - a.kills);
 
+        // Preenche a tabela HTML
         rankingFinal.forEach((time, i) => {
             const classeDestaque = i === 0 ? 'class="pos-win"' : '';
             tbody.innerHTML += `
